@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="account" >
+
+	<!-- 유저 회원가입 -->
+	<insert id="insertUserInfo" parameterType="userVO">
+		INSERT INTO USERS (
+			USERNAME, 
+			PASSWORD, 
+			NICKNAME, 
+			ENABLED,
+			JOINDT,
+			AUTHTOKEN
+		) VALUES (
+			#{username},
+			#{password},
+			#{nickname},
+			0,
+			NOW(),
+			#{authtoken}
+		)
+	</insert>
+	
+	<!-- 유저 회원가입 시 디폴트 권한 등록 -->
+	<insert id="insertUserRole" parameterType="String">
+		INSERT INTO USER_ROLES (
+			USERNAME, 
+			ROLE
+		) VALUES (
+			#{username},
+			'ROLE_USER'
+		)
+	</insert>
+
+	<!-- 유저 정보 조회 -->
+	<select id="selectUserInfo" parameterType="String" resultType="userVO">
+		SELECT
+			USERNAME,
+			PASSWORD,
+			NICKNAME,
+			ENABLED
+		FROM USERS
+		WHERE USERNAME = #{username}
+		AND WITHDRAW = 0
+	</select>
+	
+	<!-- 유저 아이디 중복여부 -->
+	<select id="selectIsExistUser" parameterType="String" resultType="int">
+		SELECT
+		  COUNT(*)
+		FROM USERS
+		WHERE USERNAME = #{username}
+	</select>
+	
+	<!-- 유저 권한 조회 -->
+	<select id="selectUserRole" parameterType="String" resultType="userRole">
+		SELECT
+			ROLE
+		FROM USER_ROLES
+		WHERE USERNAME = #{username}
+	</select>
+	
+	<!-- 유저 활성화 -->
+	<update id="updateUserEnabled" parameterType="userVO">
+		UPDATE USERS 
+			SET ENABLED = 1 
+		WHERE USERNAME = #{username}
+		AND AUTHTOKEN = #{authtoken}
+	</update>
+
+	<!-- 유저 인증 토큰 갱신 -->
+	<update id="updateUserAuthToken" parameterType="userVO">
+		UPDATE USERS 
+			SET AUTHTOKEN = #{authtoken}
+		WHERE USERNAME = #{username}
+	</update>
+
+</mapper>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+	
+	<!-- Creates the Spring Container shared by all Servlets and Filters -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	
+	<!--   Listener 가 업데이트된 session 라이프 사이클에 대해서 Spring Security를 유지 킨다고 합니다. -->
+	<listener>
+		<listener-class>
+			org.springframework.security.web.session.HttpSessionEventPublisher
+		</listener-class>
+	</listener>
+  
+  <!-- 뭔지 알아보기 -->
+	<!-- <listener>
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+	</listener> -->
+	
+	<!-- application context -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			/WEB-INF/spring/root-context.xml
+			<!-- 스프링 시큐리티 설정파일 -->
+			/WEB-INF/spring/security-context.xml
+		</param-value>
+	</context-param>
+	<!-- application context end -->
+	
+	<!-- Processes application requests -->
+	<servlet>
+		<servlet-name>dispatcher</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<!-- 스프링 설정파일은 *-context.xml의 이름형식으로 참조 된다. -->
+			<param-value>/WEB-INF/spring/dispatcher/*-context.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>dispatcher</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+  
+	<!-- Encoding UTF-8 -->
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>
+			org.springframework.web.filter.CharacterEncodingFilter
+		</filter-class>
+		<init-param>
+    		<param-name>encoding</param-name>
+    		<param-value>utf-8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+    	<filter-name>encodingFilter</filter-name>
+		<url-pattern>*</url-pattern>
+	</filter-mapping>
+	
+	<!-- REST API 사용 시 다국어(i18n) 커스텀 필더 설정, 기본 파라미터 전달(?lang=ko)사용시 필터 필요없음 -->
+	<!-- <filter>
+		<filter-name>LocaleFilter</filter-name>
+		<filter-class>com.app.util.domain.LocaleUrlFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>LocaleFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping> -->
+	
+	<!-- Spring Security filter 추가 -->
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>   
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+	
+	<!-- CORS(Cross Domain Filter) 크로스 도메인 설정 -->
+	<filter>
+    	<filter-name>cors</filter-name>
+    	<filter-class>com.app.util.domain.CORSFilter</filter-class>
+	</filter>
+	<filter-mapping>
+    	<filter-name>cors</filter-name>
+    	<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<!-- Session Timeout -->
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
+	
+	<!-- Error Page Setting -->
+	<error-page>
+		<error-code>401</error-code>
+		<location>/resources/error/serverError.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>403</error-code>
+		<location>/resources/error/serverError.jsp</location>
+	</error-page>
+	<error-page>
+    	<error-code>404</error-code>
+    	<location>/resources/error/notFound.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/resources/error/serverError.jsp</location>
+	</error-page>
+</web-app>

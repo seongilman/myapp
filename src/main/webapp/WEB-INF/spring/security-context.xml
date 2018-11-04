@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- bcrypt 암호화 -->
+	<beans:bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+	
+	<!-- @PreAuthorize 어노테이션 등을 사용하기 위한 설정 -->
+	<security:global-method-security pre-post-annotations="enabled"></security:global-method-security>
+	
+	<!-- enable use-expressions -->
+	<security:http auto-config="true" use-expressions="true">
+		<security:intercept-url pattern="/resources/**" access="permitAll" />
+		
+		<security:intercept-url pattern="/account/login" access="permitAll" />
+		<security:intercept-url pattern="/account/join" access="permitAll" />
+		
+		<security:intercept-url pattern="/file**" access="hasRole('ROLE_USER')" />
+		
+		<security:intercept-url pattern="/boards/write**" access="hasRole('ROLE_USER')" />
+		<security:intercept-url pattern="/boards/modify**" access="hasRole('ROLE_USER')" />
+		
+		<security:intercept-url pattern="/admin**" access="hasRole('ROLE_ADMIN')" />
+
+		<!-- access denied page -->
+		<security:access-denied-handler error-page="/403" />
+
+		<security:form-login
+		    login-page="/account/login"
+		    default-target-url="/welcome"
+			authentication-failure-url="/account/login?error"
+			
+			authentication-success-handler-ref="customAuthenticationSuccessHandler"
+			authentication-failure-handler-ref="customAuthenticationFailureHandler"
+			
+			username-parameter="username"
+			password-parameter="password" />
+		<security:logout logout-success-url="/account/login?logout" invalidate-session="true"/>
+		<!-- enable csrf protection -->
+		<security:csrf/>
+		
+		<!-- 로그인 중복방지 -->
+		<security:session-management>
+			<security:concurrency-control max-sessions="1" expired-url="/login/duplicate"/>
+		</security:session-management>
+	</security:http>
+	
+	<!-- 로그인 성공 후 핸들러 -->
+	<beans:bean id="customAuthenticationSuccessHandler"  class="com.app.spring.security.CustomAuthenticationSuccessHandler"/>
+	
+	<!-- 로그인 실패 시 핸들러 -->
+	<beans:bean id="customAuthenticationFailureHandler"  class="com.app.spring.security.CustomAuthenticationFailureHandler"/>
+
+	<!-- =============== Spring 시큐리티 기본 인증방법 =============== -->
+	<!-- Select users and user_roles from database -->
+	<!-- <security:authentication-manager>
+	  <security:authentication-provider user-service-ref="jdbcUserService">
+	  	<security:password-encoder hash="bcrypt"></security:password-encoder>
+	  </security:authentication-provider>
+	</security:authentication-manager>
+	
+		<security:jdbc-user-service id="jdbcUserService" data-source-ref="dataSource"
+		  users-by-username-query=
+		    "select username,password, enabled from users where username=?"
+		  authorities-by-username-query=
+		    "select username, role from user_roles where username =?  " /> -->
+	<!-- =============== Spring 시큐리티 기본 인증방법 =============== -->
+	
+	<!-- =============== Spring 시큐리티 User Detail을 이용한 방법 =============== -->	
+	<security:authentication-manager>
+		<security:authentication-provider ref="daoAuthenticationProvider"/>
+	</security:authentication-manager>
+	
+	<beans:bean id="daoAuthenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+		<beans:property name="userDetailsService" ref="userService" />
+		<beans:property name="passwordEncoder" ref="bcryptPasswordEncoder" />
+	</beans:bean>
+	
+	<!-- UserDetailService 구현체 -->
+	<beans:bean id="userService" class="com.app.spring.security.UserDetailServiceImple" />
+	<!-- =============== Spring 시큐리티 User Detail을 이용한 방법 =============== -->	
+	
+</beans:beans>

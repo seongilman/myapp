@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>mail properties</comment>
+
+	<!-- Mail Info Definition -->
+	<entry key="mail.smtp">smtp.gmail.com</entry>
+	<entry key="mail.port">587</entry>
+	<entry key="mail.username">seongilman@gmail.com</entry>
+	<entry key="mail.password">s1034518</entry>
+</properties>

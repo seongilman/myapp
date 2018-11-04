@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <comment>messages-properties_ko_KR</comment>
+ 
+    <entry key="app.locale">ko</entry>
+    
+    <entry key="main.title">성일만</entry>
+    <entry key="main.myname">성일만</entry>
+    <entry key="main.welcome">안녕하세요 성일만입니다.</entry>
+    <entry key="main.resume">이력서 다운로드</entry>
+    <entry key="main.imfrom">대한민국, 서울</entry>
+    <entry key="main.phone">전화번호: 010 4130 2631</entry>
+    <entry key="main.emailtitle">나에게 메세지를 보내</entry>
+    <entry key="main.email">이메일: seongilman@gmail.com</entry>
+
+    <entry key="menu.home">홈</entry>
+    <entry key="menu.portfolio">포트폴리오</entry>
+    <entry key="menu.about">나에 관하여</entry>
+    <entry key="menu.contact">연락하기</entry>
+    <entry key="menu.myskill">기술</entry>
+    
+    <entry key="button.confirm">확인</entry>
+    <entry key="button.cancel">취소</entry>
+    <entry key="button.send">메시지 전송</entry>
+    <entry key="button.reSendAuthCode">인증메일 재요청</entry>
+
+    <entry key="message.param">파라미터1 = {0}, 파라미터 = {1}</entry>
+    <entry key="message.loginFail">아이디와 비밀번호를 확인하세요.</entry>
+    
+    <entry key="txt.welcome">환영합니다</entry>
+    <entry key="txt.me">나</entry>
+    <entry key="txt.login">로그인</entry>
+    <entry key="txt.regist">회원가입</entry>
+    <entry key="txt.id">아이디</entry>
+    <entry key="txt.email">이메일</entry>
+    <entry key="txt.nickname">닉네임</entry>
+    <entry key="txt.password">비밀번호</entry>
+    <entry key="txt.repassword">비밀번호 확인</entry>
+    <entry key="txt.profile">프로필</entry>
+    <entry key="txt.board">게시판</entry>
+    <entry key="txt.write">글쓰기</entry>
+    <entry key="txt.blog">블로그</entry>
+    <entry key="txt.standard">일반</entry>
+    <entry key="txt.no">번호</entry>
+    <entry key="txt.title">제목</entry>
+    <entry key="txt.content">내용</entry>
+    <entry key="txt.blockHelper">긴 텍스트 블록은 많은 행을 넘어 확장 될 수 있습니다.</entry>
+    <entry key="txt.writer">작성자</entry>
+    <entry key="txt.date">날짜</entry>
+    <entry key="txt.hits">조회수</entry>
+    <entry key="txt.list">목록</entry>
+    <entry key="txt.authentication">인증</entry>
+    
+    <entry key="btn.write">글쓰기</entry>
+    
+    <entry key="error.badCredentials">아이디 및 비밀번호를 확인하세요.</entry>
+    <entry key="error.disabled">비활성화 상태입니다. 이메일 인증을 해주세요.</entry>
+    <entry key="error.accountExpired">만료된 계정입니다.</entry>
+    <entry key="error.credentialExpired">만료된 권한입니다.</entry>
+    <entry key="error.locked">계정이 잠겼습니다.</entry>
+    
+    <entry key="error.accessDenied">이 페이지에 액세스 할 수있는 권한이 없습니다!</entry>
+    
+    
+    <entry key="txt.required">이 항목은 필수 입력 값 입니다.</entry>
+    <entry key="txt.duplicated">중복된 값 입니다.</entry>
+    <entry key="txt.invalidEmail">유효한 이메일 주소를 입력하세요.</entry>
+    <entry key="txt.minLength">{0}글자 이상이어야합니다.</entry>
+    <entry key="txt.maxLength">{0}글자 이하이어야합니다.</entry>
+    <entry key="txt.notMatch">값이 일치하지 않습니다.</entry>
+</properties>

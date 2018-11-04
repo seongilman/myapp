@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+	
+	<!-- i18n(다국어)를 위한 messageSource 설정 -->
+	<beans:bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <beans:property name="basenames">
+            <beans:list>
+                <beans:value>classpath:message/messages-properties</beans:value>
+            </beans:list>
+        </beans:property>
+    </beans:bean>
+    
+    <!-- 1. 다국어 처리방법 설정(REST API를 사용하기 위한 CustomLocaleResolver), web.xml에 Filter를 사용하기 때문에 interceptor-context.xml를 사용하지 않음
+    	CookieLocaleResolver를 extends하여 아래 cookie등 동일하게 설정가능.
+     -->
+    <!-- <beans:bean id="localeResolver" class="com.app.util.domain.CustomLocaleResolver">
+    	<beans:property name="cookieName" value="clientlanguage"/>   
+	    <beans:property name="cookieMaxAge" value="100000"/>
+	    <beans:property name="cookiePath" value="web/cookie"/>
+	    <beans:property name="defaultLocale" value="us" />
+    </beans:bean> -->
+    
+    <!-- 2. 다국어 처리 방법설정(기본방법으로 url뒤에 ?lang=ko와 같이 전송), interceptor-context.xml에 localeChangeInterceptor를 사용해야함 -->
+    <!-- <beans:bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver" >    
+	    <beans:property name="cookieName" value="clientlanguage"/>   
+	    <beans:property name="cookieMaxAge" value="100000"/>
+	    <beans:property name="cookiePath" value="web/cookie"/>
+	    <beans:property name="defaultLocale" value="ko" />
+	</beans:bean> -->
+	
+	<beans:bean id="localeResolver"	class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+		<beans:property name="defaultLocale" value="ko" />
+	</beans:bean>
+	
+	<!-- 메세지 유틸, java 에서 사용하기 위해 bean등록 -->
+	<beans:bean id="prop" class="com.app.common.util.MessageUtil" />
+	
+</beans:beans>

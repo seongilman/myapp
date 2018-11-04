@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="board" >
+	
+	<!-- 게시물 총 카운트 -->
+	<select id="selectBoardListCount" parameterType="String" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM BOARD
+		WHERE CATEGORY = #{catagory }
+		AND DEL_YN = 'N'
+	</select>
+	
+	<!-- 게시물 조회 -->
+	<select id="selectBoardList" parameterType="boardVO" resultType="boardVO">
+		<!-- SELECT
+			B.ROWNUM AS RNUM,
+			B.NO,
+			B.CATEGORY,
+			B.TITLE,
+			B.CONTENT,
+			B.PARENT,
+			B.DEPTH,
+			B.INDENT,
+			B.HITS,
+			B.WRITER,
+			DATE_FORMAT(B.REG_DT, '%Y-%m-%d %H:%i:%s') AS REG_DT,
+			B.NICKNAME
+		FROM (
+			SELECT 
+				@ROWNUM := @ROWNUM + 1 AS ROWNUM,
+				B.NO,
+				B.CATEGORY,
+				B.TITLE,
+				B.CONTENT,
+				B.PARENT,
+				B.DEPTH,
+				B.INDENT,
+				B.HITS,
+				B.WRITER,
+				B.REG_DT,
+				U.NICKNAME
+			FROM BOARD B
+			INNER JOIN USERS U
+			ON B.WRITER = U.USERNAME,
+				(SELECT @ROWNUM := 0) R
+			ORDER BY B.PARENT DESC, B.NO
+		) B
+		WHERE B.ROWNUM BETWEEN #{startNum} AND #{endNum} -->
+		
+		<!-- SELECT
+			*
+		FROM (
+			SELECT
+				@ROWNUM := @ROWNUM + 1 AS RNUM,
+				B.NO,
+				B.CATEGORY,
+				B.TITLE,
+				B.CONTENT,
+				B.PARENT,
+				B.DEPTH,
+				B.INDENT,
+				B.HITS,
+				B.WRITER,
+				DATE_FORMAT(B.REG_DT, '%Y-%m-%d %H:%i:%s') AS REG_DT,
+				B.NICKNAME
+			FROM (
+				SELECT 
+					B.NO,
+					B.CATEGORY,
+					B.TITLE,
+					B.CONTENT,
+					B.PARENT,
+					B.DEPTH,
+					B.INDENT,
+					B.HITS,
+					B.WRITER,
+					B.REG_DT,
+					U.NICKNAME
+				FROM BOARD B
+				INNER JOIN USERS U
+				ON B.WRITER = U.USERNAME,
+					(SELECT @ROWNUM := 0) R
+				ORDER BY B.PARENT DESC, B.NO
+			) B
+		) C
+		WHERE C.RNUM BETWEEN #{startNum} AND #{endNum} -->
+
+
+		SELECT
+		  *
+		FROM (
+		  SELECT
+		    @ROWNUM := @ROWNUM + 1 AS RNUM,
+		    B.NO,
+		    B.CATEGORY,
+		    B.TITLE,
+		    B.CONTENT,
+		    B.FAMILY,
+		    B.PARENT,
+		    B.DEPTH,
+		    B.INDENT,
+		    B.HITS,
+		    B.WRITER,
+		    DATE_FORMAT(B.REG_DT, '%Y-%m-%d %H:%i:%s') AS REG_DT,
+		    B.NICKNAME
+		  FROM (
+		  (SELECT
+		    B.NO,
+		    B.CATEGORY,
+		    B.TITLE,
+		    B.CONTENT,
+		    B.FAMILY,
+		    B.PARENT,
+		    B.DEPTH,
+		    B.INDENT,
+		    B.HITS,
+		    B.WRITER,
+		    B.REG_DT,
+		    U.NICKNAME
+		  FROM BOARD B
+		  INNER JOIN USERS U
+		  ON B.WRITER = U.USERNAME
+		  WHERE B.DEL_YN = 'N'
+		  ORDER BY B.FAMILY DESC, B.DEPTH ASC) B,
+		  (SELECT @ROWNUM := 0) R
+		  )
+		) C
+		WHERE C.RNUM BETWEEN #{startNum} AND #{endNum}
+	</select>
+	
+	<!-- 게시판 글 등록 -->
+	<insert id="insertBoard" parameterType="boardVO">
+		<!-- <selectKey resultType="int" keyProperty="no" order="AFTER"> -->
+		<selectKey resultType="int" keyProperty="no" order="BEFORE">
+			<!-- SELECT LAST_INSERT_ID() -->
+			SELECT IFNULL(MAX(NO), 0) + 1 FROM BOARD
+		</selectKey> 
+		INSERT INTO BOARD (
+			CATEGORY
+			, TITLE
+			, CONTENT
+			, FAMILY
+			, PARENT
+			, DEPTH
+			, INDENT
+			, WRITER
+			, REG_DT
+		) VALUES (
+			#{category }
+			, #{title }
+			, #{content }
+			, #{no}
+			, 0
+			, 0
+			, 0
+			, #{writer }
+			, NOW()
+		)
+	</insert>
+	
+	<!-- 게시판 답글 등록 -->
+	<insert id="insertBoardReply" parameterType="boardVO">
+		<selectKey resultType="int" keyProperty="no" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey> 
+		INSERT INTO BOARD (
+			CATEGORY
+			, TITLE
+			, CONTENT
+			, FAMILY
+			, PARENT
+			, DEPTH
+			, INDENT
+			, WRITER
+			, REG_DT
+		) VALUES (
+			#{category }
+			, #{title }
+			, #{content }
+			, #{family }
+			, #{parent }
+			, #{depth }
+			, #{indent }
+			, #{writer }
+			, NOW()
+		)
+	</insert>
+	
+	<!-- 게시글 수정 -->
+	<update id="updateBoard" parameterType="boardVO">
+		UPDATE BOARD SET
+			TITLE = #{title }
+			, CONTENT = #{content }
+			, MOD_DT = NOW()
+		WHERE NO = #{no }
+	</update>
+	
+	<!-- 글 조회 -->
+	<select id="selectBoardContent" parameterType="int" resultType="boardVO">
+		SELECT
+			B.NO,					/* 글번호 */
+			B.CATEGORY,		/* 카테고리 */
+			B.TITLE,				/* 글제목 */
+			B.CONTENT,		/* 글내용 */
+			B.FAMILY,			/* 부모글그룹(NO와 동일) */
+			B.PARENT,			/* 부모글번호(댓글의경우) */
+			B.DEPTH,			/* 글정렬순서(댓글깊이) */
+			B.INDENT,			/* 들여쓰기 */
+			B.HITS,				/* 조회수 */
+			B.WRITER,			/* 작성자 아이디 */
+			DATE_FORMAT(B.REG_DT, '%Y-%m-%d %H:%i:%s') 
+			AS REG_DT,			/* 등록일 */
+			U.NICKNAME		/* 작성자 */
+		FROM BOARD B 
+		INNER JOIN USERS U
+		ON B.WRITER = U.USERNAME
+		WHERE B.NO = #{no}
+		AND B.DEL_YN = 'N'
+	</select>
+</mapper>

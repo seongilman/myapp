@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <comment>messages-properties_us</comment>
+ 
+    <entry key="app.locale">us</entry>
+    
+    <entry key="main.title">Il-man Seong</entry>
+    <entry key="main.myname">Il-man Seong</entry>
+    <entry key="main.welcome">Hello. My name is Il-man Seong</entry>
+    <entry key="main.resume">Download Resume</entry>
+    <entry key="main.imfrom">Seoul, KOR</entry>
+    <entry key="main.phone">Phone: +82 10 4130 2631</entry>
+    <entry key="main.emailtitle">Lets get in touch. Send me a message</entry>
+    <entry key="main.email">Email: seongilman@gmail.com</entry>
+    
+    <entry key="menu.home">Home</entry>
+    <entry key="menu.portfolio">Portfolio</entry>
+    <entry key="menu.about">About</entry>
+    <entry key="menu.contact">Contact</entry>
+    <entry key="menu.myskill">My Skill</entry>
+    
+    <entry key="button.confirm">Confirm</entry>
+    <entry key="button.cancel">Cancel</entry>
+    <entry key="button.send">Send Message</entry>
+    <entry key="button.reSendAuthCode">Re send authentication code</entry>
+
+    <entry key="message.param">Param1 = {0}, Param = {1}</entry>
+    <entry key="message.loginFail">Invalid username and password</entry>
+    
+    <entry key="txt.welcome">Welcome</entry>
+    <entry key="txt.me">Me</entry>
+    <entry key="txt.login">Login</entry>
+    <entry key="txt.regist">Regist</entry>
+    <entry key="txt.id">ID</entry>
+    <entry key="txt.email">E-Mail</entry>
+    <entry key="txt.nickname">Nickname</entry>
+    <entry key="txt.password">Password</entry>
+    <entry key="txt.repassword">Reenter password</entry>
+    <entry key="txt.profile">Profile</entry>
+    <entry key="txt.board">Board</entry>
+    <entry key="txt.write">Write</entry>
+    <entry key="txt.blog">Blog</entry>
+    <entry key="txt.standard">Standard</entry>
+    <entry key="txt.no">No</entry>
+    <entry key="txt.title">Title</entry>
+    <entry key="txt.content">Content</entry>
+    <entry key="txt.blockHelper">A longer block of text may extend beyond a lot of line.</entry>
+    <entry key="txt.writer">Writer</entry>
+    <entry key="txt.date">Date</entry>
+    <entry key="txt.hits">Hits</entry>
+    <entry key="txt.list">List</entry>
+    <entry key="txt.authentication">Authentication</entry>
+    
+    <entry key="btn.write">Write</entry>
+    
+    <entry key="error.badCredentials">bad credentials</entry>
+    <entry key="error.disabled">account is disabled. Email authentication is required.</entry>
+    <entry key="error.accountExpired">account has expired.</entry>
+    <entry key="error.credentialExpired">credential has expried.</entry>
+    <entry key="error.locked">account has locked.</entry>
+    
+    <entry key="error.accessDenied">You do not have permission to access this page!</entry>
+    
+    <entry key="txt.required">This field is required.</entry>
+    <entry key="txt.duplicated">This field is duplicated.</entry>
+    <entry key="txt.invalidEmail">Please enter a valid email address.</entry>
+    <entry key="txt.minLength">must be at least {0} characters.</entry>
+    <entry key="txt.maxLength">no more than {0} characters.</entry>
+    <entry key="txt.notMatch">This field is not match</entry>
+</properties>

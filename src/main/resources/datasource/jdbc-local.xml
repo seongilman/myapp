@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>JDBC Local Properties</comment>
+
+<entry key="jdbc.url">jdbc:mysql://127.0.0.1:3306/MYAPP</entry>
+<entry key="jdbc.username">root</entry>
+<entry key="jdbc.password">1034518</entry>
+
+</properties>

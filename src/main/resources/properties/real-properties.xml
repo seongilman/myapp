@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>Real Properties</comment>
+
+<!-- Common Code Definition -->
+<entry key="code.response.success">200</entry>
+<entry key="code.response.error">400</entry>
+
+<entry key="code.dot">.</entry>
+<entry key="code.path.separator">/</entry>
+
+<entry key="image.upload.path">data/images/upload</entry>
+<entry key="image.upload.dir.board">/board</entry>
+<entry key="image.upload.url">http://seongilman.cafe24.com/myapp/images/upload</entry>
+
+</properties>

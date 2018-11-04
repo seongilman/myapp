@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:oxm="http://www.springframework.org/schema/oxm"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm-3.2.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+		
+	<!-- parent(root-context)의 경우 Service 레이어와 Repository, DB 관련 bean 설정을 담고있어야 하는 것이 올바른 설정 -->
+	<context:component-scan base-package="com"> 
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+
+	<!-- 데이터베이스 프로퍼티 -->
+	<util:properties id="db" location="classpath:datasource/jdbc-local.xml" />
+	
+	<!-- 메일 프로퍼티 -->
+	<util:properties id="config" location="classpath:properties/mail-properties.xml" />
+	
+	<!-- 공통 코드 프로퍼티 -->
+	<util:properties id="code" location="classpath:properties/local-properties.xml" />
+
+	<!-- Query Log를 남기기위해 기존 dataSource는 dataSourceSpied로 변경 후 아래처럼 사용 -->
+	<bean id="dataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource"> 
+		<constructor-arg ref="dataSourceSpied" /> 
+		<property name="logFormatter"> 
+			<bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter"> 
+				<property name="loggingType" value="MULTI_LINE" /> 
+				<property name="sqlPrefix" value="SQL:::" /> 
+			</bean> 
+		</property> 
+	</bean>
+
+    <!-- Database Info --> 
+	<bean id="dataSourceSpied" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+		<property name="url" value="#{db['jdbc.url']}"/>
+		<property name="username" value="#{db['jdbc.username']}"/>
+		<property name="password" value="#{db['jdbc.password']}"/>
+	</bean>
+    
+    <!-- myBatis -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations" value="classpath:/sqls/*_mapper.xml" />
+		<property name="configLocation" value="classpath:/datasource/mybatis-config.xml" />
+	</bean>
+    
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache">
+		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+    
+    <!-- transaction Manager -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	    <property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<aop:config proxy-target-class="true">
+		<aop:pointcut id="txAdvisePointCut" expression="execution(* com.app.*.service.*Service.*(..)) "/>
+		<aop:advisor id="transactionAdvisor" pointcut-ref="txAdvisePointCut" advice-ref="txAdvice"/>
+	</aop:config>
+
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="get*" read-only="true" />
+			<tx:method name="find*" read-only="true" />
+			<tx:method name="insert*" propagation="REQUIRED" rollback-for="Exception"/>
+			<tx:method name="update*" propagation="REQUIRED" rollback-for="Exception"/>
+			<tx:method name="delete*" propagation="REQUIRED" rollback-for="Exception"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	<!-- Spring에서 제공하는 JavaMailSender사용.  -->
+	<!-- 주의! root-context.xml에서 service, repository 레이어를 스캔하기 때문에(22라인) servlet-context.xml에 위치하면 스캔하지 못함. 설정을 바꾸지 않고 servlet-context에 위치시키려면 JavaMailSender를 Autowired하는 Service를 <bean> 명시적으로 등록해야함 -->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="#{config['mail.smtp']}"/>	<!-- SMTP 서버주소 -->
+		<property name="port" value="#{config['mail.port']}"/>		<!-- SMTP 서버포트 -->
+		<property name="username" value="#{config['mail.username']}"/>	<!-- 사용자 아이디 -->
+		<property name="password" value="#{config['mail.password']}"/>	<!-- 사용자 비밀번호 -->
+		<property name="defaultEncoding" value="UTF-8"/>	<!-- 인코딩 -->
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.transport.protocol">smtp</prop>	<!-- 메일서버 프로토콜 (smtp) -->
+				<prop key="mail.smtp.auth">true</prop>	<!-- 인증여부 (false라면 미인증, 단 서버에서 허용IP 설정이 되어야 함.) * username 과 password는 인증없이 사용한다면 공백으로 두어도 됩니다. -->
+				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.smtp.timeout">8500</prop>	<!-- mail 서버 연결시 timeout 시간 설정 -->
+				<prop key="mail.debug">true</prop>	<!-- log를 보고 싶다면 사용 -->
+			</props>
+		</property>
+	</bean>
+
+</beans>
