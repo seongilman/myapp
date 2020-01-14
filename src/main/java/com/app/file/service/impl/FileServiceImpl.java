@@ -57,6 +57,8 @@ public class FileServiceImpl implements FileService {
 			// 업로드 경로/유저아이디/게시판 디렉토리
 			String saveDir = IMAGE_UPLOAD_PATH + PATH_SEPARATOR + usernameDir + PATH_SEPARATOR + IMAGE_UPLOAD_DIR_BOARD;
 			
+			logger.info("UPLOAD PATH [{}]", saveDir);
+			
 			File uploadDir = new File(saveDir);
 				
 			if (!uploadDir.exists()) {
