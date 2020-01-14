@@ -10,7 +10,8 @@
 <entry key="code.dot">.</entry>
 <entry key="code.path.separator">/</entry>
 
-<entry key="image.upload.path">data/images/upload</entry>
+<!-- <entry key="image.upload.path">data/images/upload</entry> -->
+<entry key="image.upload.path">/home/hosting_users/seongilman/data/images/upload</entry>
 <entry key="image.upload.dir.board">/board</entry>
 <entry key="image.upload.url">http://seongilman.cafe24.com/myapp/images/upload</entry>
 
