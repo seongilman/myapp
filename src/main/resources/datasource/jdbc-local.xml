@@ -3,8 +3,13 @@
 <properties>
 <comment>JDBC Local Properties</comment>
 
-<entry key="jdbc.url">jdbc:mysql://127.0.0.1:3306/MYAPP</entry>
-<entry key="jdbc.username">root</entry>
-<entry key="jdbc.password">1034518</entry>
+<!-- local -->
+<!-- <entry key="jdbc.url">jdbc:mysql://127.0.0.1:3306/MYAPP</entry> -->
+<!-- <entry key="jdbc.username">root</entry> -->
+<!-- <entry key="jdbc.password">1034518</entry> -->
+<!-- real -->
+<entry key="jdbc.url">jdbc:mysql://183.111.183.19:3306/seongilman</entry>
+<entry key="jdbc.username">seongilman</entry>
+<entry key="jdbc.password">seongilman88</entry>
 
 </properties>
