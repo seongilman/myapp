@@ -96,6 +96,10 @@
   		
   		CKEDITOR.config.language = '<spring:message code="app.locale"/>';
   		
+        // ckeditorImageUpload.jsp 따로 필요 없이 바로 페이지에서 실행
+        // CKEDITOR.config.filebrowserImageUploadUrl = '/myapp/file/upload/ckeditorjs?${_csrf.parameterName}=${_csrf.token}';	//이미지 업로드 경로
+
+        // ckeditorImageUpload.jsp 가 실행
         CKEDITOR.config.filebrowserImageUploadUrl = '/myapp/file/upload/ckeditor?${_csrf.parameterName}=${_csrf.token}';	//이미지 업로드 경로
 		CKEDITOR.config.filebrowserImageBrowseUrl= '/myapp/file/upload/list';
 

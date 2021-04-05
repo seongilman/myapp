@@ -76,7 +76,10 @@ public class FileController {
 	/**
 	 * ckeditorImageUploads
 	 * CKEDITOR 이미지 업로드	(javascript 리턴)
+	 * boardWrite.jsp 에서 호출
+	 * 
 	 * ckeditorImageUpload.jsp가 필요없이 즉시 페이지에서 실행.
+	 * 
 	 * @param request
 	 * @param upload
 	 * @param response
@@ -94,7 +97,8 @@ public class FileController {
 			String fileName = upload.getOriginalFilename();
 			byte[] bytes = upload.getBytes();
 //            String uploadPath = "저장경로/" + fileName;//저장경로
-			String uploadPath = "D:/develop/workspace/MyApps/src/main/webapp/resources/images/boast.jpg";
+			// 실제 파일에 저장해야함.
+			String uploadPath = "D:\\data\\images\\upload\\seongilman\\board\\20210405225001239.png";
  
 			out = new FileOutputStream(new File(uploadPath));
 			out.write(bytes);
@@ -102,7 +106,8 @@ public class FileController {
  
 			printWriter = response.getWriter();
 //            String fileUrl = "저장한 URL경로/" + fileName;//url경로
-			String fileUrl = "http://localhost:8080/myapp/resources/images/boast.jpg";
+			// 실제 파일에 저장한 URL 경로를 리턴
+			String fileUrl = "http://localhost:8080/myapp/images/upload/seongilman/board/20210405225001239.png";
  
 			printWriter.println("<script type='text/javascript'>window.parent.CKEDITOR.tools.callFunction("+ callback + ",'" + fileUrl + "','이미지를 업로드 하였습니다.'"+ ")</script>");
 			printWriter.flush();
